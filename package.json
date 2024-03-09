@@ -1,0 +1,16 @@
+{
+  "name": "elasticode",
+  "version": "1.0.0",
+  "description": "Explore your source code, visually",
+  "main": "index.js",
+  "scripts": {
+    "create:openapi":"npx nswag aspnetcore2openapi /project:src/elasticode/Elasticode.csproj /output:.generated/elasticode.openapi.json",
+    "create:client":"npx nswag run",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "nswag": "^14.0.3"
+  }
+}
