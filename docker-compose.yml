@@ -4,4 +4,6 @@ services:
       dockerfile: dockerfile
     ports:
       - 5231:8080
+    environment:
+      - DOTNET_ENVIRONMENT=Docker
     container_name: elasticode-app
