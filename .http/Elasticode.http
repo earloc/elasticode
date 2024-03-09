@@ -1,1 +1,1 @@
-GET http://localhost:5231/api/code/classes
+GET {{BASEURL}}/api/code/classes
