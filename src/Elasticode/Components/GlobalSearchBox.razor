@@ -1,0 +1,9 @@
+@rendermode InteractiveServer
+@inject AppViewModel app;
+<input type="text" value="@app.GlobalSearchText" @oninput="OnSearchValueChanged" />
+
+@code {
+    private void OnSearchValueChanged(ChangeEventArgs e) {
+        app.GlobalSearchText = e.Value?.ToString();
+    }
+}

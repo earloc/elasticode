@@ -1,34 +1,50 @@
 ﻿@page "/"
 @inject CodeClient client;
+@inject AppViewModel app;
+@implements IDisposable
 @rendermode InteractiveServer
 
-<PageTitle>Classes</PageTitle>
 
-<input type="text" @oninput="(e) => OnSearchValueChanged(e.Value?.ToString())" />
+<PageTitle>Classes</PageTitle>
 
 <ul>
 
 @foreach(var c in displayClasses) {
     <li>@c</li>
 }
+
 </ul>
 
 @code {
+   
     private IEnumerable<string> displayClasses = [];
     private IEnumerable<string> classes = [];
-    
+
     protected override async Task OnInitializedAsync() {
-        displayClasses = classes = await client.GetClassesAsync();
+        app.GlobalSearchTextChanged += OnGlobalTextChanged;
+
+        classes = await client.GetClassesAsync();
+
+        displayClasses = Find(classes, app.GlobalSearchText);
     }
 
-    private void OnSearchValueChanged(string? searchValue) {
-        if (searchValue is null) {
-            displayClasses = classes;
-            this.StateHasChanged();
+    private void OnGlobalTextChanged(object? sender, string? value) {
+        displayClasses = Find(classes, value);
+        this.StateHasChanged();
+    }
+
+    private IEnumerable<string> Find(IEnumerable<string> input, string? searchText) {
+        if (searchText is null) {
+            return input;
+        }
+        return classes.Where(x => x.Contains(searchText));
+    }
+
+    public void Dispose() => Dispose(true);
+    private void Dispose(bool disposing) {
+        if (!disposing) {
             return;
         }
-
-        displayClasses = classes.Where(x => x.Contains(searchValue));
-        this.StateHasChanged();
+        app.GlobalSearchTextChanged -= OnGlobalTextChanged;
     }
 }

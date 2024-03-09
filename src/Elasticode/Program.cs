@@ -11,6 +11,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<AppViewModel>();
 
 builder.Services
     .Configure<AppOptions>(options => builder.Configuration.GetSection("App").Bind(options))
@@ -45,6 +46,8 @@ else
         options.Path = "/redoc";
     });
 }
+
+
 
 app.UseHttpsRedirection();
 
