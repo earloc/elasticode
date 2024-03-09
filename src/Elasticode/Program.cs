@@ -22,6 +22,9 @@ if (!app.Environment.IsDevelopment())
 }{
     app.UseOpenApi();
     app.UseSwaggerUi();
+    app.UseReDoc(options => {
+        options.Path = "/redoc";
+    });
 }
 
 app.UseHttpsRedirection();
