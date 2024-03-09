@@ -1,9 +1,29 @@
 @rendermode InteractiveServer
 @inject AppViewModel app;
+@implements IDisposable
+
 <input type="text" value="@app.GlobalSearchText" @oninput="OnSearchValueChanged" />
 
 @code {
+
+    protected override void OnInitialized() {
+        app.GlobalSearchTextChanged += OnGlobalSearchTextChanged;
+    }
+
     private void OnSearchValueChanged(ChangeEventArgs e) {
         app.GlobalSearchText = e.Value?.ToString();
+    }
+
+
+    private void OnGlobalSearchTextChanged(object? sender, string? value) => this.StateHasChanged();
+
+    public void Dispose() => Dispose(true);
+
+    private void Dispose(bool disposing) {
+        if (!disposing) {
+            return;
+        }
+        
+        app.GlobalSearchTextChanged -= OnGlobalSearchTextChanged;
     }
 }
