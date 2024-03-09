@@ -7,10 +7,15 @@ namespace Elasticode;
 public class CodeController : Controller
 {
     [HttpGet("classes")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string[]))]
     public IActionResult GetClasses() {
         string[] classes = [
             "foo",
-            "bar"
+            "bar",
+            "foobar",
+            "oof",
+            "rab",
+            "raboof"
         ];
 
         return Ok(classes);

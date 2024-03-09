@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
-      "url": "http://redocly.github.io/redoc/openapi.yaml",
+      "url": ".generated/elasticode.openapi.json",
       "output": null,
       "newLineBehavior": "Auto"
     }
@@ -119,7 +119,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "namespace": "MyNamespace",
+      "namespace": "Elasticode.Client",
       "requiredPropertiesMustBeDefined": true,
       "dateType": "System.DateTimeOffset",
       "jsonConverters": null,
