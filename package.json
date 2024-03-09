@@ -4,6 +4,8 @@
   "description": "Explore your source code, visually",
   "main": "index.js",
   "scripts": {
+    "build": "npm run update && dotnet build",
+    "start:watch": "dotnet watch --project src/elasticode/Elasticode.csproj",
     "create:openapi":"npx nswag aspnetcore2openapi /project:src/elasticode/Elasticode.csproj /output:.generated/elasticode.openapi.json",
     "create:client":"npx nswag run",
     "update":"npm run create:openapi && npm run create:client",

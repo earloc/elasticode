@@ -1,6 +1,11 @@
 # elasticode
 Explore your source code, visually.
 
+# build it
+```bash
+npm install
+```
+
 # run it
 
 ```bash
