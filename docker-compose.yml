@@ -5,5 +5,5 @@ services:
     ports:
       - 5231:8080
     environment:
-      - DOTNET_ENVIRONMENT=Docker
+      - DOTNET_ENVIRONMENT=Container
     container_name: elasticode-app
