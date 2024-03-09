@@ -1,0 +1,7 @@
+services:
+  app:
+    build:
+      dockerfile: dockerfile
+    ports:
+      - 5231:8080
+    container_name: elasticode-app
