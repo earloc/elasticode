@@ -6,6 +6,7 @@
   "scripts": {
     "create:openapi":"npx nswag aspnetcore2openapi /project:src/elasticode/Elasticode.csproj /output:.generated/elasticode.openapi.json",
     "create:client":"npx nswag run",
+    "update":"npm run create:openapi && npm run create:client",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
