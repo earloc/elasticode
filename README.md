@@ -4,6 +4,7 @@ Explore your source code, visually.
 # build it
 ```bash
 npm install
+npm run build
 ```
 
 # run it
