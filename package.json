@@ -4,11 +4,12 @@
   "description": "Explore your source code, visually",
   "main": "index.js",
   "scripts": {
-    "build": "npm run update && dotnet build",
-    "start:watch": "dotnet watch --project src/elasticode/Elasticode.csproj",
-    "create:openapi":"npx nswag aspnetcore2openapi /project:src/elasticode/Elasticode.csproj /output:.generated/elasticode.openapi.json",
+    "build": "npm install && npm run update && dotnet build",
+    "start:watch": "dotnet watch --project src/Elasticode/Elasticode.csproj",
+    "create:openapi":"npx nswag aspnetcore2openapi /project:src/Elasticode/Elasticode.csproj /output:.generated/Elasticode.openapi.json",
     "create:client":"npx nswag run",
     "update":"npm run create:openapi && npm run create:client",
+    "container": "docker compose down && docker compose up --build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
