@@ -20,7 +20,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "$ref": "#/components/schemas/ClassModel"
                   }
                 }
               }
@@ -30,5 +30,23 @@
       }
     }
   },
-  "components": {}
+  "components": {
+    "schemas": {
+      "ClassModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
 }

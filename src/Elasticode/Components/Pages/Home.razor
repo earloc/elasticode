@@ -10,15 +10,15 @@
 <ul>
 
 @foreach(var c in displayClasses) {
-    <li>@c</li>
+    <li>@c.Name</li>
 }
 
 </ul>
 
 @code {
    
-    private IEnumerable<string> displayClasses = [];
-    private IEnumerable<string> classes = [];
+    private IEnumerable<Client.ClassModel> displayClasses = [];
+    private IEnumerable<Client.ClassModel> classes = [];
 
     protected override async Task OnInitializedAsync() {
         app.GlobalSearchTextChanged += OnGlobalTextChanged;
@@ -33,11 +33,11 @@
         this.StateHasChanged();
     }
 
-    private IEnumerable<string> Find(IEnumerable<string> input, string? searchText) {
+    private IEnumerable<Client.ClassModel> Find(IEnumerable<Client.ClassModel> input, string? searchText) {
         if (searchText is null) {
             return input;
         }
-        return classes.Where(x => x.Contains(searchText));
+        return classes.Where(x => x.Name.Contains(searchText));
     }
 
     public void Dispose() => Dispose(true);
