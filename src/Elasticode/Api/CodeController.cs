@@ -17,13 +17,13 @@ public class CodeController : Controller
     [HttpGet("classes")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClassModel[]))]
     public IActionResult GetClasses() {
-        string[] classes = [
-            "foo",
-            "bar",
-            "foobar",
-            "oof",
-            "rab",
-            "raboof"
+        ClassModel[] classes = [
+            new("foo", []),
+            new("bar", []),
+            new("foobar", []),
+            new("oof", []),
+            new("rab", []),
+            new("oofrab", []),
         ];
 
         return Ok(classes);
