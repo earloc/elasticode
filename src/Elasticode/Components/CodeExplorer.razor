@@ -1,28 +1,28 @@
-﻿<div id="container"></div>
+﻿
+<div id="container"></div>
 
 <script type="module">
 
 const data = {
-    name: "foo",
+    name: "root",
     children: [
         {
-            name: "bar",
+            name: "foo",
             children: [
-                {
-                    name: "foobar"
-                }
+                { name: "bar" },
+                { name: "foobar" },
             ]
         },
         {
             name: "oof",
             children: [
-                {
-                    name: "foobar"
-                }
+                { name: "rab" },
+                { name: "oofrab" },
             ]
-        }
+        },
     ]
-};
+}
+
 
 const drag = simulation => {
   
@@ -90,7 +90,7 @@ const node = svg.append("g")
 .join("circle")
     .attr("fill", d => d.children ? null : "#000")
     .attr("stroke", d => d.children ? null : "#fff")
-    .attr("r", 3.5)
+    .attr("r", 5)
     .call(drag(simulation));
 
 node.append("title")
@@ -111,8 +111,6 @@ node
 //invalidation.then(() => simulation.stop());
 
 const chart = svg.node();
-
-
 
 container.append(chart);
 
