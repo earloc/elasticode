@@ -17,10 +17,12 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/d3": "^7.4.3",
     "nswag": "^14.0.3"
   },
   "dependencies": {
     "d3": "^7.8.5",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.5",
+    "typescript": "^5.4.2"
   }
 }
