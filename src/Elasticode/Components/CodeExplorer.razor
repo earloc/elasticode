@@ -1,6 +1,4 @@
-﻿
-@rendermode InteractiveWebAssembly
-
+﻿@rendermode InteractiveServer
 @inject IJSRuntime js
 
 <style>
@@ -29,4 +27,47 @@
 <script src="/dist/CodeExplorer.js"></script>
 
 @code {
+
+  protected override async Task OnAfterRenderAsync(bool firstRender) {
+    var graph = new {
+      nodes = new [] {
+        new { name = "foo" },
+        new { name = "bar" },
+        new { name = "foobar" },
+        new { name = "oof" },
+        new { name = "rab" },
+        new { name = "raboof" },
+        new { name = "2foo" },
+        new { name = "2bar" },
+        new { name = "2foobar" },
+        new { name = "2oof" },
+        new { name = "2rab" },
+        new { name = "2raboof" }
+      },
+      links = new [] 
+      {
+        new { source = 0,  target = 1 },
+        new { source = 1,  target = 2 },
+        new { source = 2,  target = 0 },
+        new { source = 1,  target = 3 },
+        new { source = 3,  target = 2 },
+        new { source = 3,  target = 4 },
+        new { source = 4,  target = 5 },
+        new { source = 5,  target = 6 },
+        new { source = 5,  target = 7 },
+        new { source = 6,  target = 7 },
+        new { source = 6,  target = 8 },
+        new { source = 7,  target = 8 },
+        new { source = 9,  target = 4 },
+        new { source = 9,  target = 11 },
+        new { source = 9,  target = 10 },
+        new { source = 10, target = 11 },
+      }
+    };
+
+    if (firstRender){
+      await js.InvokeVoidAsync("showGraph", graph);
+    }
+  }
+
 }
