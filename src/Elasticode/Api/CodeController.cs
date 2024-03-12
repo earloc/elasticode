@@ -6,7 +6,7 @@ public class ClassModel (string name, IEnumerable<string> members) {
 
     public string Name { get; set; } = name;
 
-    public IEnumerable<string> Members { get; set; } = members;
+    public IEnumerable<string> Uses { get; set; } = members;
 
 }
 
@@ -20,10 +20,10 @@ public class CodeController : Controller
         ClassModel[] classes = [
             new("foo", []),
             new("bar", []),
-            new("foobar", []),
-            new("oof", []),
+            new("foobar", ["foo", "bar"]),
+            new("oof", ["rab"]),
             new("rab", []),
-            new("oofrab", []),
+            new("oofrab", ["foobar", "oof"]),
         ];
 
         return Ok(classes);
