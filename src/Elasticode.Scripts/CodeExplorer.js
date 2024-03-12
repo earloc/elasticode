@@ -7,9 +7,7 @@ function showGraph(graph) {
         .attr("x2", d => d.target.x)
         .attr("y2", d => d.target.y);
         node
-        .attr("transform", (d, i) => `translate(${d.x - (d.name.length * 6)}, ${d.y - 8})`)
-        // .attr("x", d => d.x - 15)
-        // .attr("y", d => d.y - 5);
+        .attr("transform", (d) => `translate(${d.x - (d.name.length * 6)}, ${d.y - 8})`)
     }
 
     function click(event, d) {
@@ -41,23 +39,16 @@ function showGraph(graph) {
         .selectAll(".link")
         .data(graph.links)
         .join("line")
-        .classed("link", true);
+        .classed("link", true)
+    ;
         
     const node = svg
         .selectAll(".node")
         .data(graph.nodes)
         .join("g")
-
         .classed("node", true)
         .classed("fixed", d => d.fx !== undefined)
-        // .join("g")
-        
-        // .attr("foo", d => d.name)
-        // .append("circle")
-        // .attr("r", 6)
-        // .attr("title", d => d.name)
-        // .classed("node", true)
-        // .classed("fixed", d => d.fx !== undefined)
+
     ;
 
     node.append("rect")
@@ -89,10 +80,3 @@ function showGraph(graph) {
 
     container.append(svg.node());
 }
-
-  
-
-
-
-
-
