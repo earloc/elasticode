@@ -1,43 +1,13 @@
 ﻿@page "/modules"
-<h3>Modules2</h3>
+<h3>Modules</h3>
 @rendermode InteractiveWebAssembly
 
 @inject IJSRuntime js
 
 <div id="container"></div>
 
-<style>
-
-.link {
-  stroke: #000;
-  stroke-width: 1.0px;
-}
-
-.node {
-  cursor: move;
-  fill: #ccc;
-  stroke: #000;
-  stroke-width: 1.0px;
-}
-
-.node.fixed {
-  stroke: #00f;
-}
-
-.text {
-  stroke-width: 0.5px;
-}
-
-</style>
-
-<div id="container"></div>
-
-
+<ModuleExplorer />
 
 @code {
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await js.InvokeVoidAsync("showGraph");
-    }
 }

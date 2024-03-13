@@ -7,7 +7,7 @@
     "clean": "rimraf src/Elasticode/wwwroot/.d3 && mkdir -p src/Elasticode/wwwroot/.d3",
     "build": "npm run clean && npm install && npm run assets && npm run update && dotnet build",
     "assets": "cp node_modules/d3/dist/*.js src/Elasticode/wwwroot/.d3/",
-    "start:watch": "dotnet watch --project src/Elasticode/Elasticode.csproj",
+    "dev": "dotnet watch --project src/Elasticode/Elasticode.csproj",
     "create:openapi": "npx nswag aspnetcore2openapi /project:src/Elasticode/Elasticode.csproj /output:.generated/Elasticode.openapi.json",
     "create:client": "npx nswag run",
     "update": "npm run create:openapi && npm run create:client",
