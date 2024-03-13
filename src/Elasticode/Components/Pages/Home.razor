@@ -1,75 +1,7 @@
-﻿@rendermode InteractiveServer
-@page "/"
-@inject CodeClient client;
-@inject AppViewModel app;
-@implements IDisposable
+﻿@page "/"
 
-<PageTitle>Classes</PageTitle>
+<PageTitle>Home</PageTitle>
 
-<ul>
-    <CodeExplorer Graph="@graph" />
-</ul>
+<h1>Hello, world!</h1>
 
-@code {
-   
-    private IEnumerable<Client.ClassModel> displayClasses = [];
-    private IEnumerable<Client.ClassModel> classes = [];
-
-    private object graph = new { nodes = new object [0], links = new object [0]} ;
-
-    protected override async Task OnInitializedAsync() {
-        app.GlobalSearchTextChanged += OnGlobalTextChanged;
-
-        classes = await client.GetClassesAsync();
-
-        displayClasses = Find(classes, app.GlobalSearchText);
-
-        graph = new {
-            nodes = displayClasses.Select(x => new { name = x.Name } ).ToArray(),
-            links = new [] 
-            {
-                new { source = 0,  target = 1 },
-                new { source = 1,  target = 2 },
-                new { source = 2,  target = 0 },
-                new { source = 1,  target = 3 },
-                new { source = 3,  target = 2 },
-                new { source = 3,  target = 4 },
-                new { source = 4,  target = 5 },
-            }
-        };
-        this.StateHasChanged();
-    }
-
-    private void OnGlobalTextChanged(object? sender, string? value) {
-        displayClasses = Find(classes, value);
-        graph = new {
-            nodes = displayClasses.Select(x => new { name = x.Name } ).ToArray(),
-            links = new [] 
-            {
-                new { source = 0,  target = 1 },
-                new { source = 1,  target = 2 },
-                new { source = 2,  target = 0 },
-                new { source = 1,  target = 3 },
-                new { source = 3,  target = 2 },
-                new { source = 3,  target = 4 },
-                new { source = 4,  target = 5 },
-            }
-        };
-        this.StateHasChanged();
-    }
-
-    private IEnumerable<Client.ClassModel> Find(IEnumerable<Client.ClassModel> input, string? searchText) {
-        if (searchText is null) {
-            return input;
-        }
-        return classes.Where(x => x.Name.Contains(searchText));
-    }
-
-    public void Dispose() => Dispose(true);
-    private void Dispose(bool disposing) {
-        if (!disposing) {
-            return;
-        }
-        app.GlobalSearchTextChanged -= OnGlobalTextChanged;
-    }
-}
+Welcome to your new app.

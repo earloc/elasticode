@@ -396,5 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-src/Elasticode/wwwroot/.*
-src/Elasticode/wwwroot/dist
+

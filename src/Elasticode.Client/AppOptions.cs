@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Elasticode;
+namespace Elasticode.Client;
 
 public class AppOptions
 {
