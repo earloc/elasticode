@@ -6,12 +6,12 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/code/classes": {
+    "/api/code/modules/classes": {
       "get": {
         "tags": [
-          "Code"
+          "Module"
         ],
-        "operationId": "Code_GetClasses",
+        "operationId": "Module_GetModules",
         "responses": {
           "200": {
             "description": "",

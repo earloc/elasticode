@@ -21,7 +21,7 @@ namespace Elasticode.Client
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CodeClient 
+    public partial class ModuleClient 
     {
         #pragma warning disable 8618
         private string _baseUrl;
@@ -30,7 +30,7 @@ namespace Elasticode.Client
         private System.Net.Http.HttpClient _httpClient;
         private static System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings, true);
 
-        public CodeClient(string baseUrl, System.Net.Http.HttpClient httpClient)
+        public ModuleClient(string baseUrl, System.Net.Http.HttpClient httpClient)
         {
             BaseUrl = baseUrl;
             _httpClient = httpClient;
@@ -64,14 +64,14 @@ namespace Elasticode.Client
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ModuleModel>> GetClassesAsync()
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ModuleModel>> GetModulesAsync()
         {
-            return GetClassesAsync(System.Threading.CancellationToken.None);
+            return GetModulesAsync(System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ModuleModel>> GetClassesAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ModuleModel>> GetModulesAsync(System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -84,8 +84,8 @@ namespace Elasticode.Client
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
-                    // Operation Path: "api/code/classes"
-                    urlBuilder_.Append("api/code/classes");
+                    // Operation Path: "api/code/modules/classes"
+                    urlBuilder_.Append("api/code/modules/classes");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
