@@ -1,4 +1,6 @@
+using Elasticode.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Options;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -13,7 +15,7 @@ builder.Services.AddKeyedScoped("api", (services, key) => {
     };
 });
 
-builder.Services.AddScoped(services => new CodeClient("", services.GetRequiredKeyedService<HttpClient>("api")));
+//builder.Services.AddScoped(services => new CodeClient("", services.GetRequiredKeyedService<HttpClient>("api")));
 
 
 await builder.Build().RunAsync();

@@ -9,12 +9,21 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddControllers();
 
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApiDocument();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseOpenApi();
+    app.UseSwaggerUi();
+    app.UseReDoc(options => {
+        options.Path = "/redoc";
+    });
 }
 else
 {
@@ -31,5 +40,7 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Modules).Assembly);
+
+app.MapControllers();
 
 app.Run();
