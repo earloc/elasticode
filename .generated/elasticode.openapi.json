@@ -20,7 +20,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ClassModel"
+                    "$ref": "#/components/schemas/ModuleModel"
                   }
                 }
               }
@@ -32,7 +32,7 @@
   },
   "components": {
     "schemas": {
-      "ClassModel": {
+      "ModuleModel": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
