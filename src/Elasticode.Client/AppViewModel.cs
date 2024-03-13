@@ -1,7 +1,7 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Elasticode;
+namespace Elasticode.Client;
 
 public partial class AppViewModel : ObservableObject
 {
