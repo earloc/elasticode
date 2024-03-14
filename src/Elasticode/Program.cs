@@ -25,6 +25,7 @@ builder.Services.AddKeyedScoped("api", (services, key) => {
 });
 
 builder.Services.AddScoped(services => new ModuleClient("", services.GetRequiredKeyedService<HttpClient>("api")));
+builder.Services.AddScoped<AppViewModel>();
 
 var app = builder.Build();
 

@@ -16,8 +16,9 @@ builder.Services.AddKeyedScoped("api", (services, key) => {
         BaseAddress = new Uri(options.Value.BaseUrl)
     };
 });
-
 builder.Services.AddScoped(services => new ModuleClient("", services.GetRequiredKeyedService<HttpClient>("api")));
+
+builder.Services.AddScoped<AppViewModel>();
 
 
 await builder.Build().RunAsync();

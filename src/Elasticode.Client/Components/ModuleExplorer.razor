@@ -1,7 +1,7 @@
 ﻿
 @rendermode InteractiveWebAssembly
 @inject IJSRuntime js
-@inject ModuleClient moduleApi
+
 
 <style>
 
@@ -120,17 +120,23 @@
 
 @code {
 
-  [Parameter] public object? Graph { get; set; }
+  [Parameter, EditorRequired] public IEnumerable<ModuleModel>? Modules { get; set; }
+
   protected override async Task OnAfterRenderAsync(bool firstRender) {
-    var modules = (await moduleApi.GetModulesAsync()).ToArray();
+    
+     if (Modules is null) {
+        return;
+    }
+    var modules = Modules.ToArray();
     var map = modules.ToDictionary(x => x.Name);
     var links = new List<LinkModel>();
-
-    for (int sourceIndex = 0; sourceIndex < modules.Length; sourceIndex++) {
+    for (int sourceIndex = 0; sourceIndex < modules.Length; sourceIndex++) 
+    {
         var module = modules[sourceIndex];
 
         foreach (var reference in module.Uses) {
-            if (!map.TryGetValue(reference, out var referencedModule)) {
+            if (!map.TryGetValue(reference, out var referencedModule)) 
+            {
                 continue;
             }
 
@@ -139,8 +145,6 @@
             links.Add(new (sourceIndex, destinationIndex));
         }
     }
-
-
     var graph = new {
         nodes = modules.Select(x => new { name = x.Name } ).ToArray(),
         links = links.Select(x => new {

@@ -2,12 +2,44 @@
 <h3>Modules</h3>
 @rendermode InteractiveWebAssembly
 
+@implements IDisposable
+
 @inject IJSRuntime js
+@inject ModuleClient moduleApi
+@inject AppViewModel app
 
 <div id="container"></div>
 
-<ModuleExplorer />
+<ModuleExplorer Modules="@displayedModules" />
 
 @code {
+    private IEnumerable<ModuleModel>? modules = default;
+        private IEnumerable<ModuleModel>? displayedModules = default;
 
+    protected override void OnInitialized() {
+        app.GlobalSearchTextChanged += OnGlobalSearchTextChanged;
+    }
+
+    private void OnGlobalSearchTextChanged(object? sender, string? searchText) {
+        displayedModules = FilterModules(modules, searchText);
+    }
+
+    protected override async Task OnInitializedAsync() {
+        modules = await moduleApi.GetModulesAsync();
+        displayedModules = FilterModules(modules, app.GlobalSearchText);
+    }
+
+    private static IEnumerable<ModuleModel>? FilterModules(IEnumerable<ModuleModel>? source, string? searchText) {
+        if (searchText is null ) {
+            return source;
+        }
+        return source?.Where(x => x.Name.Contains(searchText));
+    }
+    public void Dispose() => Dispose(true);
+
+    private void Dispose(bool disposing) {
+        if (disposing) {
+            app.GlobalSearchTextChanged -= OnGlobalSearchTextChanged;
+        }
+    }
 }
