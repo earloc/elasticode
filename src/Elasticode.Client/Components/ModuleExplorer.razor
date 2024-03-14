@@ -96,7 +96,7 @@
                 .data(graph.links)
                 .join("line")
                 .classed("link", true)
-            ;
+        ;
 
         const node = svg
             .selectAll(".node")
@@ -104,20 +104,19 @@
             .join("g")
             .classed("node", true)
             .classed("fixed", d => d.fx !== undefined)
-
-            ;
+        ;
 
         node.append("rect")
             .attr("width", d => d.name.length * 12)
             .attr("height", 16)
-            ;
+        ;
 
         node.append("text")
             .attr("dy", ".80em")
             .attr("dx", ".40em")
             .classed("text", true)
             .text(d => d.name)
-            ;
+        ;
 
         const simulation = d3
             .forceSimulation()
@@ -125,12 +124,14 @@
             .force("charge", d3.forceManyBody())
             .force("center", d3.forceCenter(width / 2, height / 2))
             .force("link", d3.forceLink(graph.links))
-            .on("tick", tick);
+            .on("tick", tick)
+        ;
 
         const drag = d3
             .drag()
             .on("start", dragstart)
-            .on("drag", dragged);
+            .on("drag", dragged)
+        ;
 
         node.call(drag).on("click", click);
 
