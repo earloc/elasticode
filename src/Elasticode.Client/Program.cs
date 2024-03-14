@@ -4,8 +4,10 @@ using Microsoft.Extensions.Options;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+var appSection = builder.Configuration.GetSection("App");
+
 builder.Services
-    .Configure<AppOptions>(options => builder.Configuration.GetSection("App").Bind(options))
+    .Configure<AppOptions>(options => appSection.Bind(options))
 ;
 
 builder.Services.AddKeyedScoped("api", (services, key) => {

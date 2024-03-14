@@ -1,6 +1,7 @@
 ﻿
 @rendermode InteractiveWebAssembly
 @inject IJSRuntime js
+@inject ModuleClient moduleApi
 
 <style>
 
@@ -28,33 +29,11 @@
 
 <div id="container"></div>
 
-<script src=".d3/d3.min.js"></script>
+<script src=".d3/d3.min.js" ></script>
+
 <script>
 
-    function showGraph() {
-        const graph = ({
-            nodes: Array.from({ length: 13 }, () => ({ name: "hello world2"})),
-            links: [
-                { source: 0, target: 1 },
-                { source: 1, target: 2 },
-                { source: 2, target: 0 },
-                { source: 1, target: 3 },
-                { source: 3, target: 2 },
-                { source: 3, target: 4 },
-                { source: 4, target: 5 },
-                { source: 5, target: 6 },
-                { source: 5, target: 7 },
-                { source: 6, target: 7 },
-                { source: 6, target: 8 },
-                { source: 7, target: 8 },
-                { source: 9, target: 4 },
-                { source: 9, target: 11 },
-                { source: 9, target: 10 },
-                { source: 10, target: 11 },
-                { source: 11, target: 12 },
-                { source: 12, target: 10 }
-            ]
-        });
+    function showGraph(graph) {
 
         function tick() {
             link
@@ -142,9 +121,35 @@
 @code {
 
   [Parameter] public object? Graph { get; set; }
-
   protected override async Task OnAfterRenderAsync(bool firstRender) {
-    await js.InvokeVoidAsync("showGraph");
+    var modules = (await moduleApi.GetModulesAsync()).ToArray();
+    var map = modules.ToDictionary(x => x.Name);
+    var links = new List<LinkModel>();
+
+    for (int sourceIndex = 0; sourceIndex < modules.Length; sourceIndex++) {
+        var module = modules[sourceIndex];
+
+        foreach (var reference in module.Uses) {
+            if (!map.TryGetValue(reference, out var referencedModule)) {
+                continue;
+            }
+
+            var destinationIndex = Array.IndexOf(modules, referencedModule);
+
+            links.Add(new (sourceIndex, destinationIndex));
+        }
+    }
+
+
+    var graph = new {
+        nodes = modules.Select(x => new { name = x.Name } ).ToArray(),
+        links = links.Select(x => new {
+            source = x.From,
+            target = x.To
+        })
+    };
+
+    await js.InvokeVoidAsync("showGraph", graph);
   }
 
 }

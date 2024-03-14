@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Elasticode.Client\Elasticode.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="NSwag.AspNetCore" Version="14.0.3" />
     <PackageReference Include="NSwag.CodeGeneration.CSharp" Version="14.0.3" />

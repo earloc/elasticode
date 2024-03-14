@@ -1,5 +1,7 @@
+using Elasticode.Client;
 using Elasticode.Client.Pages;
 using Elasticode.Components;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +11,20 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddControllers();
 
+var appSection = builder.Configuration.GetSection("App");
+builder.Services.Configure<AppOptions>(appSection);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument();
+
+builder.Services.AddKeyedScoped("api", (services, key) => {
+    var options = services.GetRequiredService<IOptions<AppOptions>>();
+    return new HttpClient() {
+        BaseAddress = new Uri(options.Value.BaseUrl)
+    };
+});
+
+builder.Services.AddScoped(services => new ModuleClient("", services.GetRequiredKeyedService<HttpClient>("api")));
 
 var app = builder.Build();
 
