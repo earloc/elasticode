@@ -114,7 +114,11 @@
 
         node.call(drag).on("click", click);
 
-        document.getElementById("container").append(svg.node());
+        const container = document.getElementById("container");
+        while(container.firstChild){
+            container.removeChild(container.firstChild);
+        }
+        container.append(svg.node());
     }
 </script>
 
