@@ -31,7 +31,7 @@
     }
 
     private static IEnumerable<ModuleModel>? FilterModules(IEnumerable<ModuleModel>? source, string? searchText) {
-        if (searchText is null ) {
+        if (string.IsNullOrEmpty(searchText)) {
             return source;
         }
         return source?.Where(x => x.Name.Contains(searchText));
