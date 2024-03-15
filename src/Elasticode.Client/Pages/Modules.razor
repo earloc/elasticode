@@ -13,8 +13,8 @@
 <ModuleExplorer Modules="@displayedModules" />
 
 @code {
-    private IEnumerable<ModuleModel>? modules = default;
-        private IEnumerable<ModuleModel>? displayedModules = default;
+    private Dictionary<string, ModuleModel> modules = new();
+    private IEnumerable<ModuleModel>? displayedModules = default;
 
     protected override void OnInitialized() {
         app.GlobalSearchTextChanged += OnGlobalSearchTextChanged;
@@ -26,16 +26,49 @@
     }
 
     protected override async Task OnInitializedAsync() {
-        modules = await moduleApi.GetModulesAsync();
+        var response = await moduleApi.GetModulesAsync();
+        modules = response.ToDictionary(x => x.Name);
         displayedModules = FilterModules(modules, app.GlobalSearchText);
     }
 
-    private static IEnumerable<ModuleModel>? FilterModules(IEnumerable<ModuleModel>? source, string? searchText) {
-        if (string.IsNullOrEmpty(searchText)) {
-            return source;
+    private static IEnumerable<ModuleModel>? FilterModules(Dictionary<string, ModuleModel> map, string? searchText) {
+        if (string.IsNullOrEmpty(searchText)) 
+        {
+            return map.Values;
         }
-        return source?.Where(x => x.Name.Contains(searchText));
+
+        var focusedModuleNames = map
+            .Keys
+            .Where(x => x.Contains(searchText)) ?? []
+        ;
+
+        var collector = new HashSet<string>();
+
+        foreach (var moduleName in focusedModuleNames) 
+        {
+            AddRecursive(collector, map, moduleName);
+        }
+
+        return map
+            .Where(x => collector.Contains(x.Key))
+            .Select(x => x.Value)
+            .ToArray()
+        ;
     }
+    private static void AddRecursive(HashSet<string> collector, Dictionary<string, ModuleModel> map, string name) {
+        if (collector.Contains(name)) {
+            return;
+        }
+
+        collector.Add(name);
+
+        var module = map[name];
+
+        foreach (var usedModuleName in module.Uses) {
+            AddRecursive(collector, map, usedModuleName);
+        }
+    }
+
     public void Dispose() => Dispose(true);
 
     private void Dispose(bool disposing) {
