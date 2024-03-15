@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Elasticode;
 
@@ -9,15 +10,13 @@ public class ModuleController : Controller
     [HttpGet("classes")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ModuleModel[]))]
     public IActionResult GetModules() {
-        ModuleModel[] classes = [
-            new("foo", []),
-            new("bar", []),
-            new("foobar", ["foo", "bar"]),
-            new("oof", ["rab"]),
-            new("rab", []),
-            new("oofrab", ["foobar", "oof"]),
-        ];
+        var content = System.IO.File.ReadAllText("../../.temp/static.json");
 
-        return Ok(classes);
+        if (content is null) {
+            return NotFound();
+        }
+        var modules = JsonSerializer.Deserialize<ModuleModel[]>(content);
+
+        return Ok(modules);
     }
 }
