@@ -35,10 +35,10 @@
     const boundingBoxWidthFactor = 12;
     const boundingBoxHeight = 20;
 
-    function calcSlopeDegrees(p0, p1, offsetX) {
+    function calcSlopeDegrees(p0, p1, offsetX0, offsetX1) {
         // https://www.mathebibel.de/steigungswinkel
         const opposite = p1.y - p0.y;
-        const adjacent = p1.x - p0.x + offsetX;
+        const adjacent = p1.x + offsetX1 - p0.x - offsetX0;
         const m = opposite / adjacent;
         const radians = Math.atan(m);
         const degrees = radians * (180 / Math.PI);
@@ -52,34 +52,44 @@
         return -90
     }
 
-    function calcOffsetX(d) {
+    function calcTargetOffsetX(d) {
         let offset = 0;
         if (d.source.x < d.target.x) {
             offset = 0;
         }
         else {
-            offset = d.name.length * boundingBoxWidthFactor;
+            offset = d.target.name.length * boundingBoxWidthFactor;
+        }
+
+        return offset;
+    }
+    function calcSourceOffsetX(d) {
+        let offset = 0;
+        if (d.source.x > d.target.x) {
+            offset = 0;
+        }
+        else {
+            offset = d.source.name.length * boundingBoxWidthFactor;
         }
 
         return offset;
     }
 
     function transformJoint(joint) {
-
-        //const width = joint.name.length * boundingBoxWidthFactor;
-        const offsetX = calcOffsetX(joint);
-        const slopeDegrees = calcSlopeDegrees(joint.source, joint.target, offsetX);
+        const sourceOffsetX = calcSourceOffsetX(joint);
+        const targetOffsetX = calcTargetOffsetX(joint);
+        const slopeDegrees = calcSlopeDegrees(joint.source, joint.target, sourceOffsetX, targetOffsetX);
         const rotationOffset = calcRotationOffset(joint.source, joint.target);
 
-        return `translate(${joint.target.x + offsetX}, ${joint.target.y}) rotate(${rotationOffset + slopeDegrees})`;
+        return `translate(${joint.target.x + targetOffsetX}, ${joint.target.y}) rotate(${rotationOffset + slopeDegrees})`;
     }
 
     function showGraph(graph) {
         function tick() {
             link
-                .attr("x1", d => d.source.x)
+                .attr("x1", d => d.source.x+ calcSourceOffsetX(d))
                 .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x + calcOffsetX(d))
+                .attr("x2", d => d.target.x + calcTargetOffsetX(d))
                 .attr("y2", d => d.target.y)
             ;
             joint
@@ -212,15 +222,27 @@
 
             var destinationIndex = Array.IndexOf(modules, referencedModule);
 
-            links.Add(new (sourceIndex, destinationIndex, modules[destinationIndex].Name));
+            links.Add(
+                new ( 
+                    From: new (
+                        Index: sourceIndex, 
+                        Name: modules[sourceIndex].Name
+                    ), 
+                    To: new (
+                        Index: destinationIndex, 
+                        Name: modules[destinationIndex].Name
+                    ) 
+                )
+            );
         }
     }
     var graph = new {
         nodes = modules.Select(x => new { name = x.Name } ).ToArray(),
         links = links.Select(x => new {
-            source = x.From,
-            target = x.To,
-            name = x.Name
+            source = x.From.Index,
+            sourceName = x.From.Name,
+            target = x.To.Index,
+            targetName = x.To.Name
         })
     };
 

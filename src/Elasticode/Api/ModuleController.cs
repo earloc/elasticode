@@ -10,7 +10,7 @@ public class ModuleController : Controller
     [HttpGet("classes")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ModuleModel[]))]
     public IActionResult GetModules() {
-        var content = System.IO.File.ReadAllText("../../.temp/static.json");
+        var content = System.IO.File.ReadAllText("../../.temp/static2.json");
 
         if (content is null) {
             return NotFound();

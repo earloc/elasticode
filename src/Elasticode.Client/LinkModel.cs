@@ -1,3 +1,2 @@
 ﻿namespace Elasticode.Client;
-
-public record LinkModel (int From, int To, string Name);
+public record LinkModel (EdgeModel From, EdgeModel To);
