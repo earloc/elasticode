@@ -33,16 +33,40 @@
 
 <script>
 
+    function slopeDegrees(p0, p1) {
+        // https://www.mathebibel.de/steigungswinkel
+        const opposite = p1.y - p0.y;
+        const adjacent = p1.x - p0.x;
+        const m = opposite / adjacent;
+        const radians = Math.atan(m);
+        const degrees = radians * (180 / Math.PI);
+        console.log(degrees);
+        return degrees;
+    }
+
+    function rotationOffset(p0, p1) {
+        if (p0.x <= p1.x) {
+            return 90;
+        }
+        return -90
+    }
+
     function showGraph(graph) {
+        const boxHeight = 16;
 
         function tick() {
             link
                 .attr("x1", d => d.source.x)
                 .attr("y1", d => d.source.y)
                 .attr("x2", d => d.target.x)
-                .attr("y2", d => d.target.y);
+                .attr("y2", d => d.target.y)
+            ;
+            joint
+                .attr("transform", (d) => `translate(${d.target.x}, ${d.target.y}) rotate(${ rotationOffset(d.source, d.target) + slopeDegrees(d.source, d.target)})`)
+            ;
             node
-                .attr("transform", (d) => `translate(${d.x - (d.name.length * 6)}, ${d.y - 8})`)
+                .attr("transform", (d) => `translate(${d.x}, ${d.y - (boxHeight / 2)})`)
+            ;
         }
 
         function click(event, d) {
@@ -74,8 +98,20 @@
                 .selectAll(".link")
                 .data(graph.links)
                 .join("line")
-                .classed("link", true)
+                .classed("link", true),
+            joint = svg
+                .selectAll(".joint")
+                .data(graph.links)
+                .join("polygon")
+                .attr("points", "0 0, 10 30, -10 30")
+                .attr("r", 1)
+                .classed("joint", true)
         ;
+
+        @* const links = .selectAll(".link")
+            .append("polygon")
+            .attr("points", "250,60 100,400 400,400")
+        ; *@
 
         const node = svg
             .selectAll(".node")
@@ -86,8 +122,8 @@
         ;
 
         node.append("rect")
-            .attr("width", d => d.name.length * 12)
-            .attr("height", 16)
+            .attr("width", d => d.name.length * 10)
+            .attr("height", 20)
         ;
 
         node.append("text")
@@ -118,7 +154,7 @@
             svg.attr("transform", (transform = e.transform));
         });
 
-        node
+        svg
             .call(zoom)
             .call(zoom.transform, d3.zoomIdentity)
         ;
