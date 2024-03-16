@@ -32,40 +32,61 @@
 <script src="d3/d3.min.js" ></script>
 
 <script>
+    const boundingBoxWidthFactor = 12;
+    const boundingBoxHeight = 20;
 
-    function slopeDegrees(p0, p1) {
+    function calcSlopeDegrees(p0, p1, offsetX) {
         // https://www.mathebibel.de/steigungswinkel
         const opposite = p1.y - p0.y;
-        const adjacent = p1.x - p0.x;
+        const adjacent = p1.x - p0.x + offsetX;
         const m = opposite / adjacent;
         const radians = Math.atan(m);
         const degrees = radians * (180 / Math.PI);
-        console.log(degrees);
         return degrees;
     }
 
-    function rotationOffset(p0, p1) {
+    function calcRotationOffset(p0, p1) {
         if (p0.x <= p1.x) {
             return 90;
         }
         return -90
     }
 
-    function showGraph(graph) {
-        const boxHeight = 16;
+    function calcOffsetX(d) {
+        let offset = 0;
+        if (d.source.x < d.target.x) {
+            offset = 0;
+        }
+        else {
+            offset = d.name.length * boundingBoxWidthFactor;
+        }
 
+        return offset;
+    }
+
+    function transformJoint(joint) {
+
+        //const width = joint.name.length * boundingBoxWidthFactor;
+        const offsetX = calcOffsetX(joint);
+        const slopeDegrees = calcSlopeDegrees(joint.source, joint.target, offsetX);
+        const rotationOffset = calcRotationOffset(joint.source, joint.target);
+
+        return `translate(${joint.target.x + offsetX}, ${joint.target.y}) rotate(${rotationOffset + slopeDegrees})`;
+    }
+
+    function showGraph(graph) {
         function tick() {
             link
                 .attr("x1", d => d.source.x)
                 .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x)
+                .attr("x2", d => d.target.x + calcOffsetX(d))
                 .attr("y2", d => d.target.y)
             ;
             joint
-                .attr("transform", (d) => `translate(${d.target.x}, ${d.target.y}) rotate(${ rotationOffset(d.source, d.target) + slopeDegrees(d.source, d.target)})`)
+                .attr("transform", (d) => transformJoint(d))
             ;
             node
-                .attr("transform", (d) => `translate(${d.x}, ${d.y - (boxHeight / 2)})`)
+                .attr("transform", (d) => `translate(${d.x}, ${d.y - (boundingBoxHeight / 2)})`)
             ;
         }
 
@@ -122,8 +143,8 @@
         ;
 
         node.append("rect")
-            .attr("width", d => d.name.length * 10)
-            .attr("height", 20)
+            .attr("width", d => d.name.length * boundingBoxWidthFactor)
+            .attr("height", boundingBoxHeight)
         ;
 
         node.append("text")
@@ -191,14 +212,15 @@
 
             var destinationIndex = Array.IndexOf(modules, referencedModule);
 
-            links.Add(new (sourceIndex, destinationIndex));
+            links.Add(new (sourceIndex, destinationIndex, modules[destinationIndex].Name));
         }
     }
     var graph = new {
         nodes = modules.Select(x => new { name = x.Name } ).ToArray(),
         links = links.Select(x => new {
             source = x.From,
-            target = x.To
+            target = x.To,
+            name = x.Name
         })
     };
 
