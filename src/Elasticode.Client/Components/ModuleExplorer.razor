@@ -32,10 +32,11 @@
 <script src="d3/d3.min.js" ></script>
 
 <script>
+    function showGraph(graph) {
     const boundingBoxWidthFactor = 12;
     const boundingBoxHeight = 20;
 
-    function calcSlopeDegrees(p0, p1, offsetX0, offsetX1) {
+    @* function calcSlopeDegrees(p0, p1, offsetX0, offsetX1) {
         // https://www.mathebibel.de/steigungswinkel
         const opposite = p1.y - p0.y;
         const adjacent = p1.x + offsetX1 - p0.x - offsetX0;
@@ -43,60 +44,105 @@
         const radians = Math.atan(m);
         const degrees = radians * (180 / Math.PI);
         return degrees;
-    }
+    } *@
 
-    function calcRotationOffset(p0, p1) {
+    @* function calcRotationOffset(p0, p1) {
         if (p0.x <= p1.x) {
             return 90;
         }
-        return -90
-    }
+        return -90;
+    } *@
 
-    function calcTargetOffsetX(d) {
-        let offset = 0;
-        if (d.source.x < d.target.x) {
-            offset = 0;
+    @* function calcTargetOffset(d) {
+        const sourceWidth = d.source.name.length * boundingBoxWidthFactor;
+        const sourceHalfWidth = sourceWidth / 2;
+        const sourceX0 = d.source.x;
+        const sourceX1 = d.source.x + sourceHalfWidth;
+        const minSourceX = Math.min(sourceX0, sourceX1);
+        const maxSourceX = Math.max(sourceX0, sourceX1);
+
+        const targetWidth = d.target.name.length * boundingBoxWidthFactor;
+        const targetHalfWidth = targetWidth / 2;
+        const targetX0 = d.target.x;
+        const targetX1 = d.target.x + targetWidth;
+        const minTargetX = Math.min(targetX0, targetX1);
+        const maxTargetX = Math.max(targetX0, targetX1);
+
+        let offsetY = 0;
+        if (d.source.y < d.target.y) {
+            offsetY = 10;
+        }
+
+        if (d.source.y > d.target.y)
+            offsetY = -10;
+        }
+
+        if (maxSourceX < minTargetX) {
+            // source is left of target
+            return { x: targetHalfWidth, y: 0 };
+        }
+
+        if (minSourceX > maxTargetX) {
+            // source is right of target
+            return { x: targetWidth + targetHalfWidth, y: 0 };
+        }
+
+        return { x: targetWidth, y: 0 };
+    } *@
+
+    @* function calcSourceOffsetX(d) {
+        const width = d.source.name.length * boundingBoxWidthFactor;
+        const halfWidth = width / 2;
+
+        const sourceX = d.source.x - halfWidth;
+        const targetX = d.target.x - halfWidth;
+
+        if (sourceX > targetX) {
+            return halfWidth;
         }
         else {
-            offset = d.target.name.length * boundingBoxWidthFactor;
+            return width + halfWidth;
         }
+    } *@
 
-        return offset;
-    }
-    function calcSourceOffsetX(d) {
-        let offset = 0;
-        if (d.source.x > d.target.x) {
-            offset = 0;
-        }
-        else {
-            offset = d.source.name.length * boundingBoxWidthFactor;
-        }
-
-        return offset;
-    }
-
-    function transformJoint(joint) {
+    @* function transformJoint(joint) {
         const sourceOffsetX = calcSourceOffsetX(joint);
-        const targetOffsetX = calcTargetOffsetX(joint);
-        const slopeDegrees = calcSlopeDegrees(joint.source, joint.target, sourceOffsetX, targetOffsetX);
+        const targetOffset = calcTargetOffset(joint);
+        const slopeDegrees = calcSlopeDegrees(joint.source, joint.target, sourceOffsetX, targetOffset.x);
         const rotationOffset = calcRotationOffset(joint.source, joint.target);
 
-        return `translate(${joint.target.x + targetOffsetX}, ${joint.target.y}) rotate(${rotationOffset + slopeDegrees})`;
-    }
+        return `translate(${joint.target.x + targetOffset.x}, ${joint.target.y + targetOffset.y}) rotate(${rotationOffset + slopeDegrees})`;
+    } *@
 
-    function showGraph(graph) {
         function tick() {
             link
-                .attr("x1", d => d.source.x+ calcSourceOffsetX(d))
-                .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x + calcTargetOffsetX(d))
-                .attr("y2", d => d.target.y)
+                .datum(d => {
+                    console.log(d);
+                    return {
+                        p0: 
+                            {
+                                x: d.source.x,
+                                y: d.source.y + 10
+                            },
+                        p1: 
+                            {
+                                x: d.source.x,
+                                y: d.source.y + 10
+                            }
+                    }
+                })
+                .attr("x1", d => d.p0.x)
+                .attr("y1", d => d.p0.y)
+                .attr("x2", d => d.p1.x)
+                .attr("y2", d => d.p1.y)
             ;
-            joint
+            @* joint
                 .attr("transform", (d) => transformJoint(d))
-            ;
+            ; *@
             node
-                .attr("transform", (d) => `translate(${d.x}, ${d.y - (boundingBoxHeight / 2)})`)
+                //.attr("transform", (d) => `translate(${d.x + (d.name.length * boundingBoxWidthFactor) / 2}, ${d.y - (boundingBoxHeight / 2)})`)
+                .attr("transform", (d) => `translate(${d.x}, ${d.y})`)
+
             ;
         }
 
@@ -121,22 +167,22 @@
             return x < lo ? lo : x > hi ? hi : x;
         }
 
-        const height = 2000;
-        const width = 2000;
+        const height = 1000;
+        const width = 1000;
 
         const svg = d3.create("svg").attr("viewBox", [0, 0, width, height]),
             link = svg
                 .selectAll(".link")
                 .data(graph.links)
                 .join("line")
-                .classed("link", true),
-            joint = svg
+                .classed("link", true)
+            @* joint = svg
                 .selectAll(".joint")
                 .data(graph.links)
                 .join("polygon")
                 .attr("points", "0 0, 10 30, -10 30")
                 .attr("r", 1)
-                .classed("joint", true)
+                .classed("joint", true) *@
         ;
 
         @* const links = .selectAll(".link")
@@ -167,9 +213,9 @@
         const simulation = d3
             .forceSimulation()
             .nodes(graph.nodes)
-            @* .force("charge", d3.forceManyBody().strength(-500)) *@
+            .force("charge", d3.forceManyBody().strength(50))
             .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("link", d3.forceLink(graph.links).distance(250))
+            .force("link", d3.forceLink(graph.links).distance(100))
             .on("tick", tick)
         ;
 
