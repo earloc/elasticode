@@ -36,15 +36,15 @@
     const boundingBoxWidthFactor = 12;
     const boundingBoxHeight = 20;
 
-    @* function calcSlopeDegrees(p0, p1, offsetX0, offsetX1) {
+    function calcSlopeDegrees(p0, p1) {
         // https://www.mathebibel.de/steigungswinkel
         const opposite = p1.y - p0.y;
-        const adjacent = p1.x + offsetX1 - p0.x - offsetX0;
+        const adjacent = p1.x - p0.x;
         const m = opposite / adjacent;
         const radians = Math.atan(m);
         const degrees = radians * (180 / Math.PI);
-        return degrees;
-    } *@
+        return degrees ?? 90;
+    }
 
     @* function calcRotationOffset(p0, p1) {
         if (p0.x <= p1.x) {
@@ -117,20 +117,54 @@
         function tick() {
             link
                 .datum(d => {
-                    console.log(d);
-                    return {
-                        p0: 
-                            {
-                                x: d.source.x,
-                                y: d.source.y + 10
-                            },
-                        p1: 
-                            {
-                                x: d.source.x,
-                                y: d.source.y + 10
-                            }
+                    const sourceWidth = d.source.name.length * boundingBoxWidthFactor;
+                    const targetWidth = d.target.name.length * boundingBoxWidthFactor;
+                    const height = 20;
+
+                    const sourceCenter = { x: d.source.x + (width / 2), y: d.source.y + (height / 2) };
+                    const sourceOffset = { x: 0, y: 0 };
+
+                    const targetCenter = { x: d.target.x + (width / 2), y: d.target.y + (height / 2) };
+                    const targetOffset = { x: 0, y: 0 };
+
+                    const slopeDegrees = calcSlopeDegrees(sourceCenter, targetCenter);
+
+                    if (slopeDegrees <= 45 && slopeDegrees >= -45  ) {
+                       
                     }
+                    else {
+                        sourceOffset.x = sourceWidth / 2;
+                        targetOffset.x = targetWidth / 2;
+                    }
+
+                    const more = {
+                        p0: 
+                        { 
+                            x: d.source.x + sourceOffset.x,
+                            y: d.source.y + 10 
+                        }, 
+                        p1: 
+                        { 
+                            x: d.target.x + targetOffset.x,
+                            y: d.target.y + 10 
+                        }
+                    };
+
+                    const datum = {...d, ...more };
+                    return datum;
                 })
+                @* {
+                    p0: 
+                    { 
+                        x: d.source.x, 
+                        y: d.source.y + 10 
+                    }, 
+                    p1: 
+                    { 
+                        x: d.source.x, 
+                        y: d.source.y + 10 
+                    }
+                }) *@
                 .attr("x1", d => d.p0.x)
                 .attr("y1", d => d.p0.y)
                 .attr("x2", d => d.p1.x)
