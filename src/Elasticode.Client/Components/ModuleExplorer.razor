@@ -42,8 +42,7 @@
 <script src="d3/d3.min.js" ></script>
 
 <script>
-    function showGraph(graph, withGuideLines) {
-    console.log(withGuideLines);
+    function showGraph(graph, withGuideLines, isDebugEnabled) {
     const boundingBoxWidthFactor = 12;
     const boundingBoxHeight = 20;
 
@@ -127,7 +126,9 @@
 
 
         function debug(data) {
-            console.log(data);
+            if (isDebugEnabled) {
+                console.log(data);
+            }
         }
 
         function tick() {
@@ -149,7 +150,8 @@
                     sourceOffset.x = 0;
                     targetOffset.x = 0;
 
-                    // Origin 0/0 us on the upper most left top, so every y on top of another, is actually less
+                    // Everything takes place in the global Quadrant II
+                    // So a container Source above Target, has Source.Y >= Target.Y
                     if (sourceCenter.x > targetCenter.x) {
                         // Quadrant I or II
                         if (sourceCenter.y < targetCenter.y) { 
@@ -159,11 +161,17 @@
                                 // lower half
                                 sourceOffset.x = 0;
                                 sourceOffset.y = heightHalf;
+
+                                targetOffset.x = targetWidth;
+                                targetOffset.y = heightHalf;
                             }
                             else {
                                 // upper half
                                 sourceOffset.x = sourceWidth / 2;
                                 sourceOffset.y = height;
+
+                                targetOffset.x = targetWidth / 2;
+                                targetOffset.y = 0;
                             }
                         }
                         else if (sourceCenter.y > targetCenter.y) {
@@ -173,11 +181,17 @@
                                 // upper half
                                 sourceOffset.x = 0;
                                 sourceOffset.y = heightHalf;
+
+                                targetOffset.x = targetWidth;
+                                targetOffset.y = height / 2;
                             }
                             else {
                                 // lower half
                                 sourceOffset.x = sourceWidth / 2;
                                 sourceOffset.y = 0;
+
+                                targetOffset.x = targetWidth / 2;
+                                targetOffset.y = height;
                             }
                         }
                         else {
@@ -195,11 +209,17 @@
                                 // lower half
                                 sourceOffset.x = sourceWidth / 2;
                                 sourceOffset.y = 0;
+
+                                targetOffset.x = targetWidth / 2;
+                                targetOffset.y = height;
                             }
                             else {
                                 // upper half
                                 sourceOffset.x = sourceWidth;
                                 sourceOffset.y = heightHalf;
+
+                                targetOffset.x = 0;
+                                targetOffset.y = height / 2;
                             }
                         }
                         else if (sourceCenter.y < targetCenter.y) {
@@ -209,11 +229,17 @@
                                 // lower half
                                 sourceOffset.x = sourceWidth;
                                 sourceOffset.y = heightHalf;
+
+                                targetOffset.x = 0;
+                                targetOffset.y = height / 2;
                             }
                             else {
                                 // upper half
                                 sourceOffset.x = sourceWidth / 2;
                                 sourceOffset.y = height;
+
+                                targetOffset.x = targetWidth / 2;
+                                targetOffset.y = 0;
                             }
                         }
                         else {
@@ -497,7 +523,7 @@
         })
     };
 
-    await js.InvokeVoidAsync("showGraph", graph, IsGuideLinesEnabled);
+    await js.InvokeVoidAsync("showGraph", graph, IsGuideLinesEnabled, false);
   }
 
 }
