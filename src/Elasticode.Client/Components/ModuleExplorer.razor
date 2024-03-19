@@ -146,8 +146,8 @@
 
                     const slopeDegrees = calcSlopeDegrees(sourceCenter, targetCenter);
 
-                    sourceOffset.x = sourceWidth / 2;
-                    targetOffset.x = targetWidth / 2;
+                    sourceOffset.x = 0;
+                    targetOffset.x = 0;
 
                     // Origin 0/0 us on the upper most left top, so every y on top of another, is actually less
                     if (sourceCenter.x > targetCenter.x) {
@@ -156,12 +156,12 @@
                             // Quadrant I
                             debug(`I ${slopeDegrees}`);
                             if (slopeDegrees <= 0 && slopeDegrees >= -45) {
-                                // lower Quadrant
+                                // lower half
                                 sourceOffset.x = 0;
                                 sourceOffset.y = heightHalf;
                             }
                             else {
-                                // upper Quadrant
+                                // upper half
                                 sourceOffset.x = sourceWidth / 2;
                                 sourceOffset.y = height;
                             }
@@ -170,12 +170,12 @@
                             debug(`II ${slopeDegrees}`);
                             // Quadrant II
                             if (slopeDegrees >= 0 && slopeDegrees <= 45) {
-                                // upper Quadrant
+                                // upper half
                                 sourceOffset.x = 0;
                                 sourceOffset.y = heightHalf;
                             }
                             else {
-                                // lower Quadrant
+                                // lower half
                                 sourceOffset.x = sourceWidth / 2;
                                 sourceOffset.y = 0;
                             }
@@ -191,6 +191,16 @@
                         if (sourceCenter.y > targetCenter.y) {
                             // Quadrant III
                             debug(`III ${slopeDegrees}`);
+                            if (slopeDegrees >= -90 && slopeDegrees <= -45) {
+                                // lower half
+                                sourceOffset.x = sourceWidth / 2;
+                                sourceOffset.y = 0;
+                            }
+                            else {
+                                // upper half
+                                sourceOffset.x = sourceWidth;
+                                sourceOffset.y = heightHalf;
+                            }
                         }
                         else if (sourceCenter.y < targetCenter.y) {
                             // Quadrant IV
