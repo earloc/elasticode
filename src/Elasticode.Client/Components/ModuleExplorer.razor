@@ -125,6 +125,11 @@
         return `translate(${joint.target.x + targetOffset.x}, ${joint.target.y + targetOffset.y}) rotate(${rotationOffset + slopeDegrees})`;
     } *@
 
+
+        function debug(data) {
+            console.log(data);
+        }
+
         function tick() {
             link
                 .datum(d => {
@@ -132,32 +137,64 @@
                     const targetWidth = d.target.name.length * boundingBoxWidthFactor;
                     const height = 20;
 
-                    const sourceCenter = { x: d.source.x + (width / 2), y: d.source.y + (height / 2) };
+                    const sourceCenter = { x: d.source.x + (sourceWidth / 2), y: d.source.y + (height / 2) };
                     const sourceOffset = { x: 0, y: 0 };
 
-                    const targetCenter = { x: d.target.x + (width / 2), y: d.target.y + (height / 2) };
+                    const targetCenter = { x: d.target.x + (targetWidth / 2), y: d.target.y + (height / 2) };
                     const targetOffset = { x: 0, y: 0 };
 
                     const slopeDegrees = calcSlopeDegrees(sourceCenter, targetCenter);
 
-                    if (slopeDegrees <= 45 && slopeDegrees >= -45  ) {
-                       
+                    sourceOffset.x = sourceWidth / 2;
+                    targetOffset.x = targetWidth / 2;
+
+                    if (sourceCenter.x > targetCenter.x) {
+                        // Quadrant I or II
+                        if (sourceCenter.y < targetCenter.y) {
+                            debug("I");
+                            // Quadrant I
+                            sourceOffset.x = 0;
+                        }
+                        else if (sourceCenter.y > targetCenter.y) {
+                            debug("II");
+                            // Quadrant II
+                        }
+                        else {
+                            //leveled
+                            debug("leveled1");
+                        }
+                        //targetOffset.x = targetWidth;
+                    }
+                    else if (sourceCenter.x < targetCenter.x) {
+                        // Quadrant III or IV
+                        if (sourceCenter.y > targetCenter.y) {
+                            // Quadrant III
+                            debug("III");
+                        }
+                        else if (sourceCenter.y < targetCenter.y) {
+                            // Quadrant IV
+                            debug("IV");
+                        }
+                        else {
+                            //leveled
+                            debug("leveled2");
+                        }
                     }
                     else {
-                        sourceOffset.x = sourceWidth / 2;
-                        targetOffset.x = targetWidth / 2;
+                        // leveled
+                        debug("leveled3");
                     }
 
                     const more = {
                         p0: 
                         { 
                             x: d.source.x + sourceOffset.x,
-                            y: d.source.y + 10 
+                            y: d.source.y + height / 2 
                         }, 
                         p1: 
                         { 
                             x: d.target.x + targetOffset.x,
-                            y: d.target.y + 10 
+                            y: d.target.y + height / 2 
                         }
                     };
 
