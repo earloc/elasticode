@@ -42,7 +42,8 @@
 <script src="d3/d3.min.js" ></script>
 
 <script>
-    function showGraph(graph) {
+    function showGraph(graph, withGuideLines) {
+    console.log(withGuideLines);
     const boundingBoxWidthFactor = 12;
     const boundingBoxHeight = 20;
 
@@ -189,40 +190,43 @@
 
             ;
 
-            guideX
-                .attr("x1", d => d.x - 1000)
-                .attr("y1", d => d.y + 10)
-                .attr("x2", d => d.x + 1000)
-                .attr("y2", d => d.y + 10)
-            ;
+            if (withGuideLines) {
 
-            guideY
-                .attr("x1", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
-                .attr("y1", d => d.y - 1000)
-                .attr("x2", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
-                .attr("y2", d => d.y + 1000)
-            ;
+                guideX
+                    .attr("x1", d => d.x - 1000)
+                    .attr("y1", d => d.y + 10)
+                    .attr("x2", d => d.x + 1000)
+                    .attr("y2", d => d.y + 10)
+                ;
 
-            guideA
-                .attr("x1", d => d.x - 1000 + (d.name.length * boundingBoxWidthFactor) / 2 )
-                .attr("y1", d => d.y + 1000 + 10)
-                .attr("x2", d => d.x + 1000 + (d.name.length * boundingBoxWidthFactor) / 2)
-                .attr("y2", d => d.y - 1000 + 10)
-            ;
+                guideY
+                    .attr("x1", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
+                    .attr("y1", d => d.y - 1000)
+                    .attr("x2", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
+                    .attr("y2", d => d.y + 1000)
+                ;
 
-            guideB
-                .attr("x1", d => d.x + 1000 + (d.name.length * boundingBoxWidthFactor) / 2 )
-                .attr("y1", d => d.y + 1000 + 10)
-                .attr("x2", d => d.x - 1000 + (d.name.length * boundingBoxWidthFactor) / 2)
-                .attr("y2", d => d.y - 1000 + 10)
-            ;
+                guideA
+                    .attr("x1", d => d.x - 1000 + (d.name.length * boundingBoxWidthFactor) / 2 )
+                    .attr("y1", d => d.y + 1000 + 10)
+                    .attr("x2", d => d.x + 1000 + (d.name.length * boundingBoxWidthFactor) / 2)
+                    .attr("y2", d => d.y - 1000 + 10)
+                ;
 
-            @* guideB
-                .attr("x1", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
-                .attr("y1", d => d.y - 1000)
-                .attr("x2", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
-                .attr("y2", d => d.y + 1000)
-            ; *@
+                guideB
+                    .attr("x1", d => d.x + 1000 + (d.name.length * boundingBoxWidthFactor) / 2 )
+                    .attr("y1", d => d.y + 1000 + 10)
+                    .attr("x2", d => d.x - 1000 + (d.name.length * boundingBoxWidthFactor) / 2)
+                    .attr("y2", d => d.y - 1000 + 10)
+                ;
+
+                @* guideB
+                    .attr("x1", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
+                    .attr("y1", d => d.y - 1000)
+                    .attr("x2", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
+                    .attr("y2", d => d.y + 1000)
+                ; *@
+            }
         }
 
         function click(event, d) {
@@ -289,37 +293,48 @@
             .text(d => d.name)
         ;
 
-        const guideX = svg
+        let guideX = svg
             .selectAll(".guideX")
-            .data(graph.nodes)
-            .join("line")
-            .classed("guide", true)
-            .classed("guideX", true)
         ;
-
-        const guideY = svg
+        let guideY = svg
             .selectAll(".guideY")
-            .data(graph.nodes)
-            .join("line")
-            .classed("guide", true)
-            .classed("guideY", true)
         ;
-
-        const guideA = svg
+        let guideA = svg
             .selectAll(".guideA")
-            .data(graph.nodes)
-            .join("line")
-            .classed("guide", true)
-            .classed("guide2", true)
+        ;
+        let guideB = svg
+            .selectAll(".guideB")
         ;
 
-        const guideB = svg
-            .selectAll(".guideB")
-            .data(graph.nodes)
-            .join("line")
-            .classed("guide", true)
-            .classed("guide2", true)
-        ;
+        if (withGuideLines) {
+            guideX = guideX
+                .data(graph.nodes)
+                .join("line")
+                .classed("guide", true)
+                .classed("guideX", true)
+            ;
+
+            guideY = guideY
+                .data(graph.nodes)
+                .join("line")
+                .classed("guide", true)
+                .classed("guideY", true)
+            ;
+
+            guideA = guideA
+                .data(graph.nodes)
+                .join("line")
+                .classed("guide", true)
+                .classed("guide2", true)
+            ;
+
+            guideB = guideB
+                .data(graph.nodes)
+                .join("line")
+                .classed("guide", true)
+                .classed("guide2", true)
+            ;
+        }
 
         const simulation = d3
             .forceSimulation()
@@ -358,6 +373,7 @@
 @code {
 
   [Parameter, EditorRequired] public IEnumerable<ModuleModel>? Modules { get; set; }
+  [Parameter] public bool IsGuideLinesEnabled { get; set; } = true;
 
   protected override async Task OnAfterRenderAsync(bool firstRender) {
     
@@ -403,7 +419,7 @@
         })
     };
 
-    await js.InvokeVoidAsync("showGraph", graph);
+    await js.InvokeVoidAsync("showGraph", graph, true);
   }
 
 }
