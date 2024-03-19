@@ -205,6 +205,16 @@
                         else if (sourceCenter.y < targetCenter.y) {
                             // Quadrant IV
                             debug(`VI ${slopeDegrees}`);
+                            if (slopeDegrees >= 0 && slopeDegrees <= 45) {
+                                // lower half
+                                sourceOffset.x = sourceWidth;
+                                sourceOffset.y = heightHalf;
+                            }
+                            else {
+                                // upper half
+                                sourceOffset.x = sourceWidth / 2;
+                                sourceOffset.y = height;
+                            }
                         }
                         else {
                             //leveled
