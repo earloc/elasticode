@@ -25,6 +25,16 @@
   stroke-width: 0.5px;
 }
 
+.guide {
+  stroke: #00F;
+  stroke-width: 0.1px;
+  stroke-dasharray: 1,1
+}
+
+.guide2 {
+  stroke: #F00;
+}
+
 </style>
 
 <div id="container"></div>
@@ -178,6 +188,41 @@
                 .attr("transform", (d) => `translate(${d.x}, ${d.y})`)
 
             ;
+
+            guideX
+                .attr("x1", d => d.x - 1000)
+                .attr("y1", d => d.y + 10)
+                .attr("x2", d => d.x + 1000)
+                .attr("y2", d => d.y + 10)
+            ;
+
+            guideY
+                .attr("x1", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
+                .attr("y1", d => d.y - 1000)
+                .attr("x2", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
+                .attr("y2", d => d.y + 1000)
+            ;
+
+            guideA
+                .attr("x1", d => d.x - 1000 + (d.name.length * boundingBoxWidthFactor) / 2 )
+                .attr("y1", d => d.y + 1000 + 10)
+                .attr("x2", d => d.x + 1000 + (d.name.length * boundingBoxWidthFactor) / 2)
+                .attr("y2", d => d.y - 1000 + 10)
+            ;
+
+            guideB
+                .attr("x1", d => d.x + 1000 + (d.name.length * boundingBoxWidthFactor) / 2 )
+                .attr("y1", d => d.y + 1000 + 10)
+                .attr("x2", d => d.x - 1000 + (d.name.length * boundingBoxWidthFactor) / 2)
+                .attr("y2", d => d.y - 1000 + 10)
+            ;
+
+            @* guideB
+                .attr("x1", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
+                .attr("y1", d => d.y - 1000)
+                .attr("x2", d => d.x + (d.name.length * boundingBoxWidthFactor) / 2)
+                .attr("y2", d => d.y + 1000)
+            ; *@
         }
 
         function click(event, d) {
@@ -242,6 +287,38 @@
             .attr("dx", ".40em")
             .classed("text", true)
             .text(d => d.name)
+        ;
+
+        const guideX = svg
+            .selectAll(".guideX")
+            .data(graph.nodes)
+            .join("line")
+            .classed("guide", true)
+            .classed("guideX", true)
+        ;
+
+        const guideY = svg
+            .selectAll(".guideY")
+            .data(graph.nodes)
+            .join("line")
+            .classed("guide", true)
+            .classed("guideY", true)
+        ;
+
+        const guideA = svg
+            .selectAll(".guideA")
+            .data(graph.nodes)
+            .join("line")
+            .classed("guide", true)
+            .classed("guide2", true)
+        ;
+
+        const guideB = svg
+            .selectAll(".guideB")
+            .data(graph.nodes)
+            .join("line")
+            .classed("guide", true)
+            .classed("guide2", true)
         ;
 
         const simulation = d3
